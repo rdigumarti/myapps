@@ -3,10 +3,11 @@ FROM ubi8
 MAINTAINER Rajesh <test@test.com>
 
 RUN yum -y install httpd && yum clean all
-
+RUN sed -ri -e "/^Listen 80/c\Listen 8080" /etc/httpd/conf/httpd.conf && \
+ chown -R apache:apache /etc/httpd/logs/ && \
+ chown -R apache:apache /run/httpd/
 RUN echo " Welcome to Red Hat Openshift" > /var/www/html.index.html
 
-EXPOSE 80
-
-ENTRYPOINT ["/usr/sbin/httpd"]
-CMD ["-D", "FOREGROUND"]
+EXPOSE 8080
+USER apache
+CMD ["httpd", "-D", "FOREGROUND"]
