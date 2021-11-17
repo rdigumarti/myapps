@@ -4,7 +4,8 @@ RUN yum -y install httpd && yum clean all
 RUN sed -ri -e "/^Listen 80/c\Listen 8080" /etc/httpd/conf/httpd.conf && \
     chown -R apache:apache /etc/httpd/logs/ && \
     chown -R apache:apache /run/httpd/
-USER apache    
 RUN echo " Welcome to Red Hat Openshift" > /var/www/html.index.html
+RUN /usr/libexec/httpd-prepare && rpm-file-permissions
+USER 1001   
 EXPOSE 8080
 CMD ["httpd", "-D", "FOREGROUND"]
